@@ -1,5 +1,6 @@
 from tqdm import tqdm
 from itertools import product
+from time import sleep
 import zipfile
 import sys
 import argparse
@@ -49,7 +50,7 @@ if args.bruteforce:
             except:
                 continue
             else:
-                sleep(1)
+                sleep(20)
                 print("---------------SUCCESS----------------")          
                 print("[+] Password found:", password)
                 print("-------------------------------------")
@@ -69,12 +70,15 @@ if args.wordlist:
     print("Number of passwords in the file:", n_words)
 
     with open(args.wordlist, "rb") as wordlist:
-        for word in tqdm(wordlist, total=n_words, unit="word"):
+        pbar = tqdm(wordlist, total=n_words, unit="word")
+        for word in pbar:
             try:
                 zip_file.extractall(pwd=word.strip())
             except:
                 continue
             else:
+                pbar.close()
+                print("---------------SUCCESS----------------")  
                 print("[+] Password found:", word.decode().strip())
                 exit(0)
     print("[!] Password not found, try other wordlist or bruteforce.")
