@@ -10,7 +10,7 @@ group = parser.add_mutually_exclusive_group()
 group.add_argument("-b", "--bruteforce", action="store_true", help="Select the Bruteforce mode")
 group.add_argument("-w", "--wordlist", action="store", dest="wordlist", help="Select the Wordlist")
 parser.add_argument("-l", "--minlenght", action="store", type=int, dest="min_length", default="4", help="Minimum number of characters to try to bruteforce (Default = 4)")
-parser.add_argument("-L", "--maxlenght", action="store", type=int, dest="max_length", default="4", help="Max number of characters to try to bruteforce (Default = 4)")
+parser.add_argument("-L", "--maxlenght", action="store", type=int, dest="max_length", default="4", help="Maximum number of characters to try to bruteforce (Default = 4)")
 parser.add_argument("-f", "--file", action="store", dest="zip_file", default="empty", help="Zip file to crack")
 args = parser.parse_args()
 
@@ -49,7 +49,10 @@ if args.bruteforce:
             except:
                 continue
             else:
+                sleep(1)
+                print("---------------SUCCESS----------------")          
                 print("[+] Password found:", password)
+                print("-------------------------------------")
                 exit(0)
     print("[!] Password not found, try more chars or wordlist")
     exit(0)
