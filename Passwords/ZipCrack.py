@@ -56,9 +56,9 @@ if args.bruteforce:
     print("[+] Number of posssible passwords to try:", n_words)
        
     #iterate all possible combinations
+    pbar = tqdm(to_attempt, total=n_words, unit="try")
     for length in range(args.min_length, args.max_length+1):
         to_attempt = product(chars, repeat=length)
-        pbar = tqdm(to_attempt, total=n_words, unit="try")
         for attempt in pbar:
             password = ''.join(attempt)
     
