@@ -78,6 +78,7 @@ if args.bruteforce:
        
     #iterate all possible combinations
     for length in range(args.low_limit, args.up_limit+1):
+        print("Bruteforcing: testing password lenght: "+ str(length))
         to_attempt = product(chars, repeat=length)
         pbar = tqdm(to_attempt, total=n_words, unit="try")
         for attempt in pbar:
