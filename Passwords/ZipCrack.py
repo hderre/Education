@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Title: Howest Zip Cracking Toolkit
 # Version: 0.2 
 # Date: Nov 2020
@@ -80,7 +81,8 @@ if args.bruteforce:
     for length in range(args.low_limit, args.up_limit+1):
         print("Bruteforcing: testing password lenght: "+ str(length))
         to_attempt = product(chars, repeat=length)
-        pbar = tqdm(to_attempt, total=n_words, unit="try")
+        bar_max = 26**length
+        pbar = tqdm(to_attempt, total=bar_max, unit="try")
         for attempt in pbar:
             password = ''.join(attempt)
     
