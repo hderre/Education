@@ -74,7 +74,7 @@ if args.bruteforce:
                 pbar.close()                                  
                 print("[+] SUCCESS -> Password found:", password)
                 exit(0)
-    try; pbar.close()
+    try: pbar.close()
     except: continue
     print("[!] Password not found, try more chars or a wordlist")
     exit(0)
