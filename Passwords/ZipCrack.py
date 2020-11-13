@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Title: Howest Zip Cracking Toolkit
-# Version: 0.1 
+# Version: 0.2 
 # Date: Nov 2020
 # Author: Hendrik Derre
 # Description: This tool tries to crack the passwords from encrypted zip files (using ZipCrypto). For educational purposes only!
@@ -12,51 +12,72 @@ from time import sleep
 import zipfile
 import sys
 import argparse
+import os.path
 
 #Menu
-parser = argparse.ArgumentParser(description='Howest Zip Cracking T00lK1t')
+parser = argparse.ArgumentParser(description='Zip Cracking Tool - CSF Howest')
 group = parser.add_mutually_exclusive_group()
-group.add_argument("-b", "--bruteforce", action="store_true", help="Select the Bruteforce mode")
-group.add_argument("-w", "--wordlist", action="store", dest="wordlist", help="Select the Wordlist, provide wordlist as argument")
-parser.add_argument("-l", "--minlength", action="store", type=int, dest="min_length", default="4", help="Minimum number of characters in password to bruteforce (Default = 4)")
-parser.add_argument("-L", "--maxlength", action="store", type=int, dest="max_length", default="4", help="Maximum number of characters in password to bruteforce (Default = 4)")
-parser.add_argument("-f", "--file", action="store", dest="zip_file", default="empty", help="Zip file to crack")
-parser.add_argument("-v", "--verbosity", action="store_true", help="increase output verbosity, this will show passwords tried (!! slower cracking !!)")
+group.add_argument("-b", action="store_true", dest="bruteforce", help="Bruteforce mode")
+group.add_argument("-w", action="store", dest="wordlist", help="Wordlist mode - select the wordlist file")
+parser.add_argument("-l", action="store", type=int, dest="low_limit", default="4", help="Minimum length of password - Bruteforce mode only (Default = 4)")
+parser.add_argument("-u", action="store", type=int, dest="up_limit", default="4", help="Maximum length of password - Bruteforce mode only (Default = 4)")
+parser.add_argument("-f", action="store", dest="zip_file", required=True, help="Zip file to crack")
+parser.add_argument("-v", action="store_true", dest="verbosity", help="Verbose output - show all passwords tried (= slower cracking!)")
 args = parser.parse_args()
 
 #Banner
-print("-------------------------------------")
-print("\tHowest Zip Cracking T00lk1t")
-print("-------------------------------------")
-print("Welcome to the Cybersecurity Fundamentals Zip Cracking Toolkit - 2020 Quarantaine edition!")
-print("-> Only run this tool on files you have permission for from the owner!\n")
+print("-----------------------------------------------------------")
+print("\tHowest Zip Cracking Tool - CSF Howest")
+print("-----------------------------------------------------------")
+print("Welcome to the Cybersecurity Fundamentals Zip Cracking Toolkit")
+print("--> Only run this tool on files you have permission for! <--\n")
 
-# initialize the Zip File object
-if args.zip_file == "empty":
-    print("[!] Quiting\n[!] Error: No zip file to crack!\n[!]---> See usage for more info:")
+#check if a mode is selected
+if (args.bruteforce or args.wordlist): 
+    #check arguments for bruteforce
+    if args.bruteforce:
+        if (args.up_limit >= 0 and args.low_limit >= 0 and args.up_limit >= args.low_limit): pass
+        else: 
+            print("[!] Error: please check minimum '-l' and maximum '-u' password length.")
+            parser.print_usage()
+            exit(0)
+    #check arguments for wordlist
+    else:
+        if (os.path.isfile(args.wordlist)): pass
+        else:
+            print("[!] Error: Wordlist does not exist")
+            exit(0)
+
+else: 
+    print("[!] Error: No mode selected. Please select bruteforce '-b' or wordlist '-w' mode")
     parser.print_usage()
     exit(0)
-else:  
+
+# initialize the Zip File object
+if(os.path.isfile(args.zip_file)):
     zip_file = zipfile.ZipFile(args.zip_file)
+else:
+    print("[!] Error: zipfile does not exist")
+    exit(0)  
 
 
 #bruteforce mode
 #----------------------
 if args.bruteforce:
     print("[+] Bruteforce Mode Selected")
-    print("[+] Trying all combinations between "+ str(args.min_length) + " and "+ str(args.max_length) +" characters.")
+    print("[+] Trying all combinations between "+ str(args.low_limit) + " and "+ str(args.up_limit) +" characters.")
     
     #chars used in password
     chars = 'abcdefghijklmnopqrstuvwxyz' 
     
     # count the number of possible combinations for the bruteforce attempt
     n_words = 0
-    for i in range(args.min_length, args.max_length+1):
+    for i in range(args.low_limit, args.up_limit+1):
         n_words += 26**i
     print("[+] Number of posssible passwords to try:", n_words)
        
     #iterate all possible combinations
-    for length in range(args.min_length, args.max_length+1):
+    for length in range(args.low_limit, args.up_limit+1):
         to_attempt = product(chars, repeat=length)
         pbar = tqdm(to_attempt, total=n_words, unit="try")
         for attempt in pbar:
@@ -72,10 +93,10 @@ if args.bruteforce:
                 continue
             else:
                 pbar.close()                                  
-                print("[+] SUCCESS -> Password found:", password)
+                print("[+] SUCCESS - ZIP FILE CRACKED!")
+                print("[+] PASSWORD:", password)
                 exit(0)
-    try: pbar.close()
-    except: continue
+    sleep(0.5)
     print("[!] Password not found, try more chars or a wordlist")
     exit(0)
 
@@ -102,9 +123,10 @@ if args.wordlist:
                 continue
             else:
                 pbar.close()
-                print("[+] Password found:", password.decode().strip())
+                print("[+] SUCCESS - ZIP FILE CRACKED!")
+                print("[+] PASSWORD:", password.decode().strip())
                 exit(0)
-    pbar.close()
+    sleep(0.5)
     print("[!] Password not found, try other wordlist or bruteforce.")
 
 
