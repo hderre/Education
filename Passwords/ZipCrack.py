@@ -1,9 +1,8 @@
-# Howest zip cracking toolkit
-
+#!/usr/bin/env python3
+# Title: Howest Zip Cracking Toolkit
 # Version: 0.1 
 # Date: Nov 2020
 # Author: Hendrik Derre
-
 # Description: This tool tries to crack the passwords from encrypted zip files (using ZipCrypto). For educational purposes only!
 # Disclaimer: Only run this tool on files you own or have permission to crack! 
 
@@ -45,7 +44,7 @@ else:
 #----------------------
 if args.bruteforce:
     print("[+] Bruteforce Mode Selected")
-    print("[+] Trying to bruteforce all passwords between "+ str(args.min_length) + " and "+ str(args.max_length) +" characters.")
+    print("[+] Trying all combinations between "+ str(args.min_length) + " and "+ str(args.max_length) +" characters.")
     
     #chars used in password
     chars = 'abcdefghijklmnopqrstuvwxyz' 
