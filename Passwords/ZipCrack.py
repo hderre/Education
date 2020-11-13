@@ -1,3 +1,12 @@
+# Howest zip cracking toolkit
+
+# Version: 0.1 
+# Date: Nov 2020
+# Author: Hendrik Derre
+
+# Description: This tool tries to crack the passwords from encrypted zip files (using ZipCrypto). For educational purposes only!
+# Disclaimer: Only run this tool on files you own or have permission to crack! 
+
 from tqdm import tqdm
 from itertools import product
 from time import sleep
@@ -20,7 +29,8 @@ args = parser.parse_args()
 print("-------------------------------------")
 print("\tHowest Zip Cracking T00lk1t")
 print("-------------------------------------")
-print("Welcome to the Cybersecurity Fundamentals cracking toolkit - 2020 Quarantaine edition!\n")
+print("Welcome to the Cybersecurity Fundamentals Zip Cracking Toolkit - 2020 Quarantaine edition!")
+print("-> Only run this tool on files you have permission for from the owner!\n")
 
 # initialize the Zip File object
 if args.zip_file == "empty":
