@@ -2,7 +2,7 @@
 Scripts for educational purposes only!
 
 #Forensics
-## ip2location.py
+### ip2location.py:
 This tool will parse a list of ip adresses and lookup their location (country, region) and linked organisation. Output to csv file. 
 
 ## Passwords
