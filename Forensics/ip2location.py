@@ -5,10 +5,12 @@
 # Date: March 2021
 # Author: Hendrik Derre
 # Description: This tool will lookup all the IP addresses in a file on ipinfo.io and return ip, country, region and org. For educational purposes only!
+# Description: Needs the tqdm module (install with pip install tqdm)
 
 import argparse, sys, os.path
 from urllib.request import urlopen
 from json import load
+from tqdm import tqdm
 
 def ipInfo(addr=''):
     if addr == '':
@@ -44,13 +46,25 @@ else:
 #create new file (write)
 out = open(args.output_file,"w")
 
+#banner
+print("----------------------------")
+print("IP Lookup Tool V0.1")
+print("----------------------------")
+print("input file: " + str(args.addr_file))
+print("output file: " + str(args.output_file))
+print("Using Token: " + str(args.token))
+print("")
+
 #read file and lookup all IPs
 adresses = []
 with open(filename) as f:
     adresses = f.readlines()
-for ip in adresses:
+
+print("processing " + str(len(adresses)) + " IP adresses on ipinfo.io...")
+for ip in tqdm(adresses):
     ip=ip.rstrip("\n")
     location = ipInfo(ip)
     out.write(location+"\n")
 
 out.close()
+print("\n[OK] Processing Successfull!")
